@@ -9,6 +9,7 @@ export class ProductsService {
     @InjectModel(Product)
     private readonly productModel: typeof Product,
   ) { }
+  
   create(createProductDto: CreateProductDto): Promise<Product> {
     const product = {
       name: createProductDto.name,
@@ -18,9 +19,11 @@ export class ProductsService {
     };
     return this.productModel.create(product);
   }
+
   async findAll(): Promise<Product[]> {
     return this.productModel.findAll();
   }
+
   findOne(id: string): Promise<Product> {
     return this.productModel.findOne({
       where: {
@@ -28,10 +31,12 @@ export class ProductsService {
       },
     });
   }
+
   async remove(id: string): Promise<void> {
     const product = await this.findOne(id);
     await product.destroy();
   }
+
   async update(id: string, updateProductDto: UpdateProductDto):
     Promise<Product> {
     const product = await this.findOne(id);
@@ -43,5 +48,11 @@ export class ProductsService {
     };
     await product.update(productUpdated);
     return product
+  }
+
+  async findByCriteria(criteria: any): Promise<Product[]> {
+    return this.productModel.findAll({
+      where: criteria,
+    });
   }
 }
